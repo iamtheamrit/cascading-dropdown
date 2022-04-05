@@ -1,0 +1,6 @@
+{% spaceless %}
+<option value disabled selected>-----------</option>
+{% for object in object_list %}
+<option value="{{object.id}}">{{object.name}}</option>
+{% endfor %}
+{% endspaceless %}
