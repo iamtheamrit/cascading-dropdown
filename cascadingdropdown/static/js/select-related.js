@@ -25,8 +25,22 @@ $("#id_state").change(function () {
       },"#id_village",)
 });
 
+// $("#id_district").change(function () {
+//     fetchOptions("#id_village",{
+//         'district': $(this).val()
+//       })
+// });
+
 $("#id_district").change(function () {
-    fetchOptions("#id_village",{
-        'district': $(this).val()
-      })
+  var url = $("#id_village").attr("data-url") + $(this).val();
+  $("#id_village").html(emptyOption);
+    $.ajax({
+      url: url,                 
+      success: function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var option = $("<option value='" + data[i].pk + "'>" + data[i].name + "</option>");
+            $("#id_village").append(option);
+        }
+      }
+    });
 });

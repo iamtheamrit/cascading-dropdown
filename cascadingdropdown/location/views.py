@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView, FormMixin
+from django.views.generic.edit import FormMixin
 from django.views.generic import TemplateView
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import permissions
 
 # Create your views here.
 from .mixins import DropdownMixin
 from .models import State, District, Village
 from .forms import StateForm
+from .serializers import VillageModelSerializer
 
 class IndexPageView(FormMixin,TemplateView):
     form_class = StateForm
@@ -31,6 +36,16 @@ class DistrictListByState(DropdownMixin,ListView):
     def get_queryset(self):
         state = self.request.GET.get('state')
         return super().get_queryset().filter(state=state)
+    
+@api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
+def village_list_by_district(request,pk):
+    """
+    Uses Django REST Framework to provide a list of districts for a given state.
+    """
+    village = Village.objects.all().filter(district=pk)
+    serializer = VillageModelSerializer(village, many=True)
+    return Response(serializer.data)
     
 class VillageListByDistrict(DropdownMixin,ListView):
     model = Village

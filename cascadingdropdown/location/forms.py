@@ -11,7 +11,7 @@ class StateForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['district'].widget.attrs['data-url'] = reverse_lazy('location:district_list')
-        self.fields['village'].widget.attrs['data-url'] = reverse_lazy('location:village_list')
+        self.fields['village'].widget.attrs['data-url'] = "/api/district/"
         
         try:
             state_id = int(self.data.get('state'))
